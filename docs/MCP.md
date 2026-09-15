@@ -74,9 +74,10 @@ command with no arguments.
 | `auto_zoom` | Zooms where the recorded cursor clicked, like the toolbar's Automatic Zoom. |
 | `render_frame` | Shows a frame as an image: the composed picture the export would show, or the raw recording. |
 | `sample_frames` | Several frames in one labelled grid, to survey a project cheaply. |
-| `export_project` | Renders the video to a file under `~/Movies` and returns its path. |
+| `export_project` | Renders the video to a file under `~/Movies` and returns its path. H.264, HEVC, ProRes or GIF. |
 | `undo`, `redo` | Edit ▸ Undo and Redo for the project. |
 | `describe_commands` | The command reference: every command with an example. |
+| `get_more_tools` | Reports a gap: an agent calls it when nothing here does what it was asked, describing the capability it wanted. Nothing in Lumae changes; the description is recorded so the tools can grow towards what agents actually need. |
 
 Agents do not need a project id when only one editor window is open; the
 frontmost one is the default. Editing a project that is not open opens it.
@@ -90,10 +91,21 @@ is about 500 tokens at the default width; a six-frame grid costs about the same
 as one frame.
 
 **Exporting.** `export_project` writes the video through the same pipeline as
-the Export sheet. The app is sandboxed, so files can only go under `~/Movies`
-(default `~/Movies/Lumae Exports/<project name>.mp4`); ask the agent to move the
-file from there if it belongs elsewhere. The call returns when the file is
-complete, which can take a while for long projects.
+the Export sheet, but not to the same places. An agent's write has no save panel
+behind it, so the only sandbox grant available is Lumae's `~/Movies` access, and
+a destination outside it is refused with `destination_outside_movies` (default
+`~/Movies/Lumae Exports/<project name>.mp4`). Ask the agent to move the file
+afterwards if it belongs elsewhere. The Export sheet is not limited this way:
+picking a file in the panel is itself the grant, so a person can export
+anywhere, and the panel reopens wherever they last did. The call returns when
+the file is complete, which can take a while for long projects.
+
+`codec` picks the format: `h264` (plays everywhere), `hevc` (smaller),
+`proRes422LT` / `proRes422` / `proRes422HQ` / `proRes4444` for handing to an
+editor (always `.mov`, and large), or `gif` for something silent that loops in
+a chat or a README. `quality` (`good` / `high` / `best`) applies to H.264 and
+HEVC only. A GIF takes `gifFrameRate` and `gifColors`, and wants a small
+`longEdge`, 720 or less, since GIF has no inter-frame compression to lean on.
 
 Not available yet: recording, screenshots.
 
@@ -131,6 +143,7 @@ and which tool was called with what outcome, error category and duration, plus
 the shape of its arguments (which commands, what numbers, which options, with
 every piece of text such as names, captions and paths replaced by a
 placeholder) and the one-sentence reason the agent gives for the call, which
-every tool asks for in its `context` argument. Never the results or the project
-itself. Nothing about your projects leaves the Mac through MCP
+every tool asks for in its `context` argument. A `get_more_tools` call records
+the agent's description of the gap in the same way, and nothing else. Never the
+results or the project itself. Nothing about your projects leaves the Mac through MCP
 except what the connected client asks for and shows you.
