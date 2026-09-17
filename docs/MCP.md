@@ -64,13 +64,15 @@ command with no arguments.
 | Tool | What it does |
 |---|---|
 | `list_projects` | The open projects (frontmost first) and everything in the library, with ids. |
-| `get_project` | One project: a summary in seconds (clips with their timeline and media times, zooms, captions, narration, assets) and the exact document the edit commands use. Works for projects that are not open. |
+| `get_project` | One project: a summary in seconds (clips with their timeline and media times, zooms, captions, narration, music, assets) and the exact document the edit commands use. Works for projects that are not open. |
 | `open_project` | Opens a project's window, by id or by the path of a `.lumae` package. |
-| `edit_project` | Applies edit commands atomically as one undo step. Every edit the app can make is a command: rename, canvas, look (and one clip's own look with `setClipStyle`: background, padding, corners or shadow that override the video's for that clip), insert/move/delete/trim/split/replace clips, volume and mute, playback speed (`setClipSpeed`, 0.25…4, pitch kept), zooms (a zoom sent without a `transition` inherits the video's `style.motion`; zoom and click times in the summary are already on the timeline, through the clip's rate), narration, captions. |
+| `edit_project` | Applies edit commands atomically as one undo step. Every edit the app can make is a command: rename, canvas, look (and one clip's own look with `setClipStyle`: background, padding, corners or shadow that override the video's for that clip), insert/move/delete/trim/split/replace clips, volume and mute, playback speed (`setClipSpeed`, 0.25…4, pitch kept), zooms (a zoom sent without a `transition` inherits the video's `style.motion`; zoom and click times in the summary are already on the timeline, through the clip's rate), narration (segments never overlap; they move, trim with `trimVoiceoverSegment`, split with `splitVoiceoverSegment` and fade with `setVoiceoverSegmentFades`, like music), music (`addMusicSegment` and friends: pieces on one track that never overlap, each with its own gain and fades; a piece may run past the video's end, where it is cut; `updateMusicMix` sets the track's level and ducking under narration, `setMusicMuted` silences it), captions. |
 | `preview_edit` | Validates commands and returns the result without changing anything. |
-| `import_media` | Imports video files as new clips at the end of the timeline. |
-| `split_at` | Cuts whatever plays at a timeline time. |
+| `import_media` | Imports video files as new clips at the end of the timeline, and audio files (mp3, m4a, wav, aiff) as pieces on the music track after whatever is there, without fades (`setMusicSegmentFades` adds them). Music needs a clip to sit under: it is cut where the video ends. |
+| `split_at` | Cuts whatever plays at a timeline time, or, given `kind` and `id`, that clip, narration segment, piece of music or caption (zooms are not split). |
 | `add_zoom_at` | Adds a zoom around a timeline time, optionally following the recorded cursor. |
+| `move_item` | Moves a zoom, a narration segment, a piece of music or a caption to start at a timeline time, kept where its lane allows (between its neighbours, inside its clip for a zoom, before the video's end), and reports where it landed. Clips reorder with `moveClip` instead. |
+| `trim_item` | Moves one edge of any item to a timeline time, kept inside its room, its media and its minimum length; the start edge of a clip, a narration segment or a piece of music shifts what plays along with it. |
 | `auto_zoom` | Zooms where the recorded cursor clicked, like the toolbar's Automatic Zoom. |
 | `render_frame` | Shows a frame as an image: the composed picture the export would show, or the raw recording. |
 | `sample_frames` | Several frames in one labelled grid, to survey a project cheaply. |
@@ -106,6 +108,10 @@ editor (always `.mov`, and large), or `gif` for something silent that loops in
 a chat or a README. `quality` (`good` / `high` / `best`) applies to H.264 and
 HEVC only. A GIF takes `gifFrameRate` and `gifColors`, and wants a small
 `longEdge`, 720 or less, since GIF has no inter-frame compression to lean on.
+`longEdge` is accepted between 240 and 7680 pixels, and a destination inside a
+`.lumae` project package is refused (`destination_inside_package`) even under
+`~/Movies`. `sample_frames` and `preview_edit`'s `renderAt` render at most 16
+frames per call.
 
 Not available yet: recording, screenshots.
 
@@ -124,6 +130,9 @@ your user account can reach the socket.
   reach the app within 20 seconds. Check that Lumae launches on its own, and
   that the helper you configured is the one inside the Lumae you run
   (Settings › MCP Server shows the path).
+- **"Lumae closed the connection"** (also -32000): Lumae quit, or an update
+  relaunched it, while the call was in flight. Retry; the next request
+  launches it again.
 - **The helper's diagnostics** go to its stderr, which most clients show in
   their MCP logs: `lumae-mcp: Lumae is not running; launching it`,
   `connected to Lumae`, `could not reach Lumae: …`.
