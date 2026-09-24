@@ -67,20 +67,20 @@ command with no arguments.
 | `list_projects` | The open projects (frontmost first) and everything in the library, open ones included and flagged `isOpen`, with ids. Paths are reported through the sandbox symlink, so they read as `~/Movies/Lumae/…` rather than as a container, and a project's `path` follows its name — `renameProject` renames the `.lumae` package on disk too — so hold on to the id, not the path, across an edit. |
 | `get_project` | One project: a summary in seconds (clips with their timeline and media times, their fades, rate, whether each is a picture and where it departs from the video's look; zooms, captions, narration, music, camera takes with where each bubble lands on the canvas, assets) and the exact document the edit commands use. Works for projects that are not open. |
 | `open_project` | Opens a project's window, by id or by the path of a `.lumae` package. |
-| `edit_project` | Applies edit commands atomically as one undo step. Every edit the app can make is a command: rename, canvas, look (and one clip's own look with `setClipStyle`: background, padding, corners or shadow that override the video's for that clip), one clip's crop (`setClipCrop`: the part of its recording's picture it shows, in the asset's pixels; its zoom centres and the clicks `get_project` reports are then fractions of the crop), insert/move/delete/trim/split/replace clips, volume and mute, playback speed (`setClipSpeed`, 0.25…24, pitch kept; past 4× is for collapsing a long wait into a few seconds), zooms (a zoom sent without a `transition` inherits the video's `style.motion`; zoom and click times in the summary are already on the timeline, through the clip's rate), narration (segments never overlap; they move, trim with `trimVoiceoverSegment`, split with `splitVoiceoverSegment` and fade with `setVoiceoverSegmentFades`, like music), music (`addMusicSegment` and friends: pieces on one track that never overlap, each with its own gain and fades; a piece may run past the video's end, where it is cut; `updateMusicMix` sets the track's level and ducking under narration, `setMusicMuted` silences it), the camera (`addCameraSegment` and friends: takes on one lane that never overlap and never run past the video's end, drawn as a bubble over the finished picture; `setCameraStyle` is the bubble every take follows — shape, size, which corner and how far in, stroke, shadow, mirroring — and `setCameraSegmentStyle` is one take's departures from it, an empty object following the video again), captions. |
+| `edit_project` | Applies edit commands atomically as one undo step. Every edit the app can make is a command: rename, canvas, look (and one clip's own look with `setClipStyle`: background, padding, corners or shadow that override the video's for that clip), one clip's crop (`setClipCrop`: the part of its recording's picture it shows, in the asset's pixels; its zoom centres and the clicks `get_project` reports are then fractions of the crop), title cards (`insertClip` with a clip carrying `title` — text, font, colour, alignment, a reveal split by line, word or letter that fades, slides, rises, blurs, scales or types in, and an exit — instead of `assetID`; `setClipTitle` changes one, replacing the whole title), insert/move/delete/trim/split/replace clips, volume and mute, playback speed (`setClipSpeed`, 0.25…24, pitch kept; past 4× is for collapsing a long wait into a few seconds), zooms (a zoom sent without a `transition` inherits the video's `style.motion`; zoom and click times in the summary are already on the timeline, through the clip's rate), narration (segments never overlap; they move, trim with `trimVoiceoverSegment`, split with `splitVoiceoverSegment` and fade with `setVoiceoverSegmentFades`, like music), music (`addMusicSegment` and friends: pieces on one track that never overlap, each with its own gain and fades; a piece may run past the video's end, where it is cut; `updateMusicMix` sets the track's level and ducking under narration, `setMusicMuted` silences it), the camera (`addCameraSegment` and friends: takes on one lane that never overlap (one left past the video's end is cut there), drawn as a bubble over the finished picture; `setCameraStyle` is the bubble every take follows — shape, size, which corner and how far in, stroke, shadow, mirroring — and `setCameraSegmentStyle` is one take's departures from it, an empty object following the video again), captions. |
 | `preview_edit` | Validates commands and returns the result without changing anything. |
-| | `edit_project` takes `summary: "brief"`, which reports the name, the duration and counts instead of the whole project — worth using during a run of edits, since the full summary repeats every zoom and caption back. |
+| | Every tool that changes a project takes `summary: "brief"`, which reports the name, the duration and counts instead of the whole project — worth using during a run of edits, since the full summary repeats every zoom and caption back. |
 | `import_media` | Video files become new clips at the end of the timeline. Audio files (mp3, m4a, wav, aiff) land on `lane`: `music`, after whatever is there and without fades (`setMusicSegmentFades` adds them; music needs a clip to sit under, being cut where the video ends), or `narration`, which is where a spoken track belongs and carries no fades because a line that fades in has lost its first word. Images (png, jpeg, heic, tiff, webp) go where `images` says: the video's background by default, or `clip` to put each picture on the timeline as a still — an opening or closing card, five seconds long until `trimClip` says otherwise. |
 | `split_at` | Cuts whatever plays at a timeline time, or, given `kind` and `id`, that clip, camera take, narration segment, piece of music or caption (zooms are not split). |
 | `remove_range` | Cuts a span of timeline time out and closes the gap: clips inside it go, a clip straddling an edge is trimmed, one containing the whole span is split. Captions, narration, music and camera takes lose what they laid over the span and everything after is pulled back, so the edit stays in sync; zooms travel with their clip. `ranges` cuts several at once, last first, so the times stay right. |
 | `add_zoom_at` | Adds a zoom around a timeline time, optionally following the recorded cursor. |
-| `move_item` | Moves a zoom, a camera take, a narration segment, a piece of music or a caption to start at a timeline time, kept where its lane allows (between its neighbours, inside its clip for a zoom, before the video's end), and reports where it landed. Clips reorder with `moveClip` instead. |
+| `move_item` | Moves a zoom, a camera take, a narration segment, a piece of music or a caption to start at a timeline time, at the nearest spot its lane allows (a gap wide enough to hold it, on either side of a neighbour; inside its clip for a zoom; before the video's end), and reports where it landed. Clips reorder with `moveClip` instead. |
 | `trim_item` | Moves one edge of any item to a timeline time, kept inside its room, its media and its minimum length; the start edge of a clip, a narration segment or a piece of music shifts what plays along with it. |
-| `copy_items` | Copies items from one project into another — or elsewhere in the same one — bringing their media and, for a screen recording, its cursor and click data. The only way to carry a recording between projects with its interaction data intact: importing the file out of the other package copies the pixels and leaves the drawn cursor and `auto_zoom`'s clicks behind. Media the destination already holds is reused; anything that finds no room is reported rather than forced in. |
+| `copy_items` | Copies items from one project into another — or elsewhere in the same one — bringing their media and, for a screen recording, its cursor and click data. The only way to carry a recording between projects with its interaction data intact: importing the file out of the other package copies the pixels and leaves the drawn cursor and `auto_zoom`'s clicks behind. Media the destination already holds is reused; anything that finds no room is reported rather than forced in. Each copied item is reported with its id and, for a zoom, the id of the clip it landed on, so it can be named straight back to `move_item` or `trim_item`. |
 | `auto_zoom` | Zooms where the recorded cursor clicked, like the toolbar's Automatic Zoom. |
 | `list_capture_targets` | The displays and on-screen windows that can be recorded, windows front to back, each with its id and its frame in points, plus `selfCaptureAllowed` — Lumae's own windows are left out of the list while it is off. |
-| `start_recording` | Records a display, a window, or a rectangle of a display, into a new project or an existing one. Returns once capture is running, and reports what the options settled on. The microphone stays off unless asked for, unlike every other setting, which follows the app's. |
-| `stop_recording` | Stops the recording and returns once its clip is in the project, with the clip's id and the resulting summary. `trimToContent` cuts the take down to what happened. |
+| `start_recording` | Records a display, a window, or a rectangle of a display, into a new project or an existing one. Returns once capture is running, and reports what the options settled on. The microphone and the camera stay off unless asked for, unlike every other setting, which follows the app's. |
+| `stop_recording` | Stops the recording and returns once its clip is in the project, with the clip's id and the resulting summary. `trimToContent` cuts the take down to what happened. A `warning` means the take landed but something filmed beside it found no room; the clip is good. Stopping while the countdown runs or the capture selector is open cancels it, and nothing is captured. |
 | `recording_state` | What the recorder is doing — idle, counting down, recording, finalizing — with seconds captured so far. Answered while a gesture is still running, so it can be polled throughout a take. |
 | `perform_gesture` | Moves, clicks, drags, scrolls or types with a hand's pacing, while a recording runs. For the moments that are on camera. A `mark` step names a beat in the same call, so labelling costs no recording. Up to 64 steps, each `pause` up to 10 s and each `type` up to 500 characters. |
 | `mark_moment` | Names what is happening in the running recording and timestamps it, for the edit afterwards. |
@@ -88,13 +88,23 @@ command with no arguments.
 | `create_project` | An empty project in the library, opened. `start_recording` makes one on its own when no project is named. |
 | `render_frame` | Shows a frame as an image: the composed picture the export would show, or the raw recording. |
 | `sample_frames` | Several frames in one labelled grid, to survey a project cheaply. |
-| `export_project` | Renders the video to a file under `~/Movies` and returns its path. H.264, HEVC, ProRes or GIF. |
+| `export_project` | Renders the video to a file under `~/Movies` and returns its path. H.264, HEVC, ProRes or GIF. `overwrite` replaces a file once the new one is complete, and never a folder or a package. |
 | `undo`, `redo` | Edit ▸ Undo and Redo for the project. |
 | `describe_commands` | The command reference: every command with an example. |
 | `get_more_tools` | Reports a gap: an agent calls it when nothing here does what it was asked, describing the capability it wanted. Nothing in Lumae changes; the description is recorded so the tools can grow towards what agents actually need. |
 
 Agents do not need a project id when only one editor window is open; the
-frontmost one is the default. Editing a project that is not open opens it.
+frontmost one is the default. Editing a project that is not open opens it, and
+so does editing one that is open without a window — a project the menu bar is
+recording into, say — since an edit there could not be undone. While such a
+project is still being recorded into, the edit is refused instead: a window
+appearing mid-take would land over whatever is being filmed.
+
+Arguments are held to each tool's schema. A key a tool does not take, a number
+outside its bounds or a choice it does not offer is refused with where it was
+and what is allowed — inside edit commands too — rather than quietly ignored, so
+a misspelled `centre` is an error, not a zoom at the default centre. Calls sent
+without waiting for each other are applied in the order they were sent.
 
 **Skills.** What a tool schema cannot say — how long to hold a caption, why a
 click can land on the wrong window, what makes a demo worth watching — used to
@@ -121,7 +131,11 @@ the Export sheet, but not to the same places. An agent's write has no save panel
 behind it, so the only sandbox grant available is Lumae's `~/Movies` access, and
 a destination outside it is refused with `destination_outside_movies` (default
 `~/Movies/Lumae Exports/<project name>.mp4`). Ask the agent to move the file
-afterwards if it belongs elsewhere. The Export sheet is not limited this way:
+afterwards if it belongs elsewhere. A file already there is replaced only with
+`overwrite`, and only once the new one is complete, so a render that fails leaves
+it; a folder or a package at the path (an iMovie library, a Final Cut bundle) is
+never replaced. A second export to a file that is still being written is refused
+until the first is done. The Export sheet is not limited this way:
 picking a file in the panel is itself the grant, so a person can export
 anywhere, and the panel reopens wherever they last did. The call returns when
 the file is complete, which can take a while for long projects.
@@ -173,8 +187,9 @@ moment pass before each click; a pointer that teleports had no path for Lumae to
 steps into one `perform_gesture` call matters more than it looks: the recording runs in real
 time, so every round trip an agent takes is dead video for someone to cut out later.
 
-`perform_gesture` needs macOS's **Accessibility** permission as well, and refuses outside a
-recording. That second limit is deliberate: it keeps the tool a way of making a filmed moment
+`perform_gesture` needs macOS's **Accessibility** permission as well (System Settings ›
+Privacy & Security › Accessibility; on macOS 27 the page is called **Device Control and Data
+Access** — add Lumae with + if it is not listed), and refuses outside a recording. That second limit is deliberate: it keeps the tool a way of making a filmed moment
 look deliberate rather than a way to operate someone's Mac, and inside a recording the
 countdown has already run and the HUD is on screen, so nothing moves the pointer without the
 person at the machine knowing a capture is under way. It holds for the whole gesture, not only
@@ -189,8 +204,10 @@ is open the whole while. Split a long string across steps with the pauses a pers
 Only the *choosing* of a target is different from a recording a person starts. The countdown
 and the floating HUD still show, whoever began it: a recording an agent started is never
 invisible at the machine it runs on. `countdownSeconds: 0` skips the wait, not the HUD.
-Anything left out of `options` keeps whatever the user last chose in the app, and an agent's
-choices apply to its own recording without saving over those settings.
+Anything left out of `options` keeps whatever the user last chose in the app, except the
+microphone and the camera, which stay off unless the agent asks: the person's own recordings
+are where they meant to talk and be seen, and an agent's take is not. An agent's choices
+apply to its own recording without saving over those settings.
 
 The Screen Recording permission is the app's, not the agent's. Without it `start_recording`
 fails with `screen_recording_denied` and Lumae shows its onboarding window, because an agent
