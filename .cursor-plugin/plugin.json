@@ -1,0 +1,14 @@
+{
+  "name": "lumae",
+  "displayName": "Lumae",
+  "description": "Lumae is a free Mac screen recorder for polished software demos, with an MCP server built in. An agent can record a window, a display or an area, work the app on camera with a hand's pacing while Lumae films, then cut the dead air, add zooms that follow the recorded cursor, write captions and export the video. Every edit is an undo step in Lumae's editor. Requires Lumae for macOS 26 or later, a free download at lumae.app; the server is a helper inside the app.",
+  "author": {
+    "name": "Mathieu Legault",
+    "url": "https://lumae.app"
+  },
+  "homepage": "https://lumae.app",
+  "repository": "https://github.com/matlegault/lumae-releases",
+  "license": "Proprietary",
+  "keywords": ["mcp", "screen recording", "screencast", "demo video", "video editing", "macos"],
+  "logo": "docs/images/lumae-icon.png"
+}
