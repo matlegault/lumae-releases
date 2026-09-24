@@ -1,10 +1,13 @@
-# Editing Lumae projects from an agent (MCP)
+# Filming and editing demos from an agent (MCP)
 
 Lumae is a Model Context Protocol server. An MCP client such as Claude Code or
-Claude Desktop can list your projects, read them, and edit them: cut clips, add
-zooms, write captions, import media, undo. Every change an agent makes goes
-through the same editing engine as your own clicks, so it shows up live in the
-editor window, is one step in Edit ▸ Undo, and autosaves like anything else.
+Claude Desktop can record a demo — a window, a display or an area, with the app
+worked on camera at a hand's pace while Lumae films — and then edit it: cut the
+dead air, add zooms that follow the recorded cursor, write captions, export.
+What to demonstrate and where to click stay the agent's decision; Lumae does the
+filming. Every change an agent makes goes through the same editing engine as
+your own clicks, so it shows up live in the editor window, is one step in
+Edit ▸ Undo, and autosaves like anything else.
 
 ## Connect a client
 
@@ -24,9 +27,10 @@ the helper launches it in the background when a client connects.
 claude mcp add lumae -- /Applications/Lumae.app/Contents/MacOS/lumae-mcp
 ```
 
-Then, in a Claude Code session: *"List my Lumae projects"*, *"Open the
-onboarding demo and cut it at 12 seconds"*, *"Add a zoom on the click at 0:08
-that follows the cursor"*.
+Then, in a Claude Code session: *"Record a demo of adding a task in Reminders,
+then cut the dead air and zoom on each click"*, *"Open the onboarding demo and
+cut it at 12 seconds"*, *"Add a zoom on the click at 0:08 that follows the
+cursor"*.
 
 **Claude Desktop**
 
@@ -107,14 +111,10 @@ a misspelled `centre` is an error, not a zoom at the default centre. Calls sent
 without waiting for each other are applied in the order they were sent.
 
 **Skills.** What a tool schema cannot say — how long to hold a caption, why a
-click can land on the wrong window, what makes a demo worth watching — used to
-live in the server's `initialize` instructions. Clients truncate those, and at
-5.6 KB they were being cut off mid-sentence: the recording and editing halves
-never reached the agent, and every session paid for the part that did whether or
-not it recorded anything. So the instructions now carry only what shapes the
-first decision and point at `get_skill` for the rest. The guides are Markdown
-under `LumaeCore/Sources/LumaeMCP/Skills/`, embedded in the binary; editing one
-changes what agents read, with no schema change.
+click can land on the wrong window, what makes a demo worth watching — lives in
+three guides an agent reads with `get_skill`. The server's opening instructions
+are kept short and only point at them, since clients cut long instructions off,
+so an agent gets the whole of a guide when it asks for one.
 
 **Seeing the project.** `get_project` lists, for every clip, where and when the
 recorded cursor clicked, so an agent can aim a zoom without looking. When it
@@ -162,7 +162,7 @@ Working the app can happen two ways. The client's own input is faster and needs 
 permission — right for setup and for anything not being filmed. `perform_gesture` hands the
 movement to Lumae, which performs it with a hand's pacing and only while a recording is
 running — right for the moments on camera. The difference is timing that cannot be added
-afterwards: `CursorTrack` fills in travel across a jump when it draws the pointer, but never
+afterwards: Lumae can smooth the pointer's travel across a jump when it draws it, but never add
 the pause before a click, because the video already shows the app reacting.
 
 `list_capture_targets` reports what there is; `start_recording` points at one
@@ -216,7 +216,7 @@ cannot grant a macOS privacy permission on the user's behalf — ask the person 
 One trap belongs to display and area capture in particular: Lumae's own windows are left out
 of the *picture*, but they are still on the screen. An agent aiming by coordinate can click a
 window that the recording does not show, which does nothing it can see, records no click, and
-reports no error — measured 2026-09-19, a take that came back with none of its clicks. While
+reports no error. While
 `selfCaptureAllowed` is false those windows are missing from `list_capture_targets` too, so
 their frames have to come from somewhere else: move them aside first, or film a window rather
 than a display.
@@ -247,14 +247,7 @@ when a beat *started*, which is the right head and the wrong tail, since the bea
 it — trimming to the last mark truncates the last thing the demo did. The tail is the latest of
 the marks and the recorded input instead, because the dead air at the end is the agent doing
 nothing, so the agent's own last action is what bounds it. A take with nothing worth removing is
-left alone.
-
-The recording's own frames were tried for the tail and dropped. A screen recording stores one
-only where the picture changed, which sounds like the perfect signal until the subject is an app
-that repaints continuously — Lumae's own glass does, and so do animations, carets and video.
-Measured on a real take, six seconds of deliberate stillness still produced frames at 55 fps to
-the last moment, so the signal said nothing on the recordings anybody would trim. If a trim
-leaves more than you wanted, `edit_project` takes the rest off.
+left alone. If a trim leaves more than you wanted, `edit_project` takes the rest off.
 
 **Transcripts.** `transcribe` runs Apple's on-device speech recognition over the project's
 narration (or the clips' own sound when there is none) and returns every word with the timeline
