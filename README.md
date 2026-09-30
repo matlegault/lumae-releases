@@ -121,6 +121,10 @@ checks right away. Homebrew leaves an installed copy alone, so the app stays the
 - **Pictures on the timeline** for an opening or closing card, framed, zoomed and faded like any
   clip.
 - **Fades between clips**, one at a time or on every cut at once.
+- **Annotate the video** (A) with the screenshot editor's arrows, boxes, highlights, spotlight, blur,
+  labels and numbered steps. Marks sit in blocks on their own lane, fade in and out, and zoom with
+  what they point at.
+- **Watch it full screen** (F) with a player's controls, to judge the cut as your viewers will.
 - **Crop a clip after recording it** (C): free, to the canvas, the original shape, 16:9, 4:3 or
   square. Its zooms keep looking at the same thing, and one click gives the same crop to the other
   clips of that recording.
@@ -153,8 +157,8 @@ checks right away. Homebrew leaves an installed copy alone, so the app stays the
 
 - **Capture a display, a window or an area** from a global shortcut, the menu bar or the File
   menu. Add ⌃ to the shortcut to send the picture straight to the clipboard.
-- **Annotate** with arrows, rectangles, ellipses, highlights, blur, text and numbered steps, and
-  crop. None of it is painted onto the pixels, so every mark stays editable later.
+- **Annotate** with arrows, rectangles, ellipses, highlights, a spotlight, blur, text and numbered
+  steps, and crop. None of it is painted onto the pixels, so every mark stays editable later.
 - **Frame a screenshot like a video**, on the same backgrounds, with padding, corners and shadow.
 - **Copy Image** (⇧⌘C) or **export a PNG** (⌘E) at the picture's own pixel density.
 
@@ -266,6 +270,8 @@ cannot be opened by an older one.
 | ⌥⌘6 | Record an area |
 | ⌃ added to ⌥⌘3 or ⌥⌘4 | Copy the screenshot to the clipboard |
 | T | Add a title card |
+| A | Annotate the video at the playhead |
+| F | Full-screen preview |
 | C | Crop the selected clip |
 | ⌘B | Split at the playhead |
 | ⌥⌘T | Add a caption at the playhead |
