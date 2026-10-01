@@ -135,7 +135,8 @@ checks right away. Homebrew leaves an installed copy alone, so the app stays the
 ### Backgrounds and framing
 
 - **Put the recording on a colour, a gradient, one of more than fifty bundled pictures, or an image
-  of your own.** Lumae remembers the one you used last and keeps the pictures you add.
+  of your own.** Lumae remembers the one you used last, keeps the pictures you add, and saves the
+  colours and gradients you mix so every project and screenshot can use them again.
 - **Padding, shadow and corner radius**, with corners matched to the recorded window's own, so the
   frame lands exactly on its edges. A full-screen recording fills the frame with square corners.
 - **A look per video or per clip.** Any clip can depart from the video's look and come back to it
