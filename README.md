@@ -107,6 +107,8 @@ checks right away. Homebrew leaves an installed copy alone, so the app stays the
 - **A cursor worth watching.** Lumae hides the real pointer and redraws it from macOS's own vector
   artwork: a smoothed path, sharp at any zoom, with a ripple on every click. Choose per clip
   between that arrow, a touch circle for showing taps, the pointer as recorded, or none.
+- **Crisp text up close.** Exports and paused frames redraw a zoomed-in recording with Lumae's own
+  upscaling model, trained on software interfaces, so text and controls stay sharp under a zoom.
 - **Motion blur** on zooms and pans, sampled across a virtual shutter the way a camera lens blurs.
 
 ### Timeline editing
