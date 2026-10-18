@@ -95,6 +95,10 @@ checks right away. Homebrew leaves an installed copy alone, so the app stays the
 - **Keep the recording controls out of the shot.** Drag the recording pill anywhere; the next
   recording opens it in the same spot.
 - **Retake one clip** without touching the rest of the project, or record a new clip onto the end.
+- **Your camera and voice stay with their recording.** What the camera and microphone record beside
+  a clip moves, trims, splits, speeds up and deletes with it, in sync, the way Final Cut keeps a
+  clip's sound with its picture. A voice can still start before its picture or run on after it, and
+  any take can be linked to a clip or unlinked by hand (⌘L).
 
 ### Automatic zoom, smooth cursor, motion blur
 
@@ -149,8 +153,9 @@ checks right away. Homebrew leaves an installed copy alone, so the app stays the
 ### Voiceover, music and captions
 
 - **Narrate over the timeline while it plays.** The clips' own sound ducks under your voice, and a
-  take lines up with the picture it was recorded against. Each narration segment has its own level
-  and fades.
+  take lines up with the picture it was recorded against. It punches in from the playhead, replacing
+  what it covers, and stays with the picture it was recorded over. Each narration segment has its own
+  level and fades.
 - **A music track** with its own level, fades and ducking under narration, so the voice stays on
   top without riding a slider.
 - **Captions transcribed on your Mac** with Apple's on-device speech recognition, split into lines
