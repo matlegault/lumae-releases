@@ -87,14 +87,25 @@ checks right away. Homebrew leaves an installed copy alone, so the app stays the
 - **Record a display, a window or an area** with Lumae's own selector: drag an area, press Space to
   pick a window, or take the whole display. Start from the menu bar, the library or a global
   shortcut in any app.
+- **Frame an area exactly.** Its size and shape read out as you drag; the arrow keys nudge it a
+  point at a time (ten with ⇧), ⇧ keeps the canvas's shape and ⌥ draws from the centre. The next
+  recording starts on the area you used last.
+- **A countdown you can skip or call off.** Return or a click starts recording at once, Esc
+  cancels, and neither reaches the app you are about to record.
+- **Lumae steps out of the way.** Its windows hide while you record and come back with the new
+  clip when you stop, and the recording controls show your microphone's level.
+- **Restart or discard a take** from the recording controls: a fumbled take is thrown away and the
+  countdown starts again on the same window or area.
 - **System audio and the microphone** are one toggle each, and you choose the microphone.
 - **Film your camera at the same time.** It lands on a lane of its own as a bubble: circle,
   squircle, square or widescreen, any corner, with a ring, a shadow and mirroring. A floating
   preview shows you on screen while you record, and fades when the pointer comes near it so you
   can see what you are clicking.
-- **Keep the recording controls out of the shot.** Drag the recording pill anywhere; the next
-  recording opens it in the same spot.
-- **Retake one clip** without touching the rest of the project, or record a new clip onto the end.
+- **Keep the recording controls out of your way.** The recording pill opens beside what you
+  record rather than on it; drag it anywhere and the next recording opens it there, unless that
+  would cover what you record.
+- **Retake one clip** on the same area without touching the rest of the project, or record a new
+  clip onto the end.
 - **Your camera and voice stay with their recording.** What the camera and microphone record beside
   a clip moves, trims, splits, speeds up and deletes with it, in sync, the way Final Cut keeps a
   clip's sound with its picture. A voice can still start before its picture or run on after it, and
@@ -127,7 +138,7 @@ checks right away. Homebrew leaves an installed copy alone, so the app stays the
 - **Pictures on the timeline** for an opening or closing card, framed, zoomed and faded like any
   clip.
 - **Fades between clips**, one at a time or on every cut at once.
-- **Annotate the video** (A) with the screenshot editor's arrows, boxes, highlights, spotlight, blur,
+- **Annotate the video** (A) with the screenshot editor's arrows, lines, boxes, highlights, spotlight, blur,
   labels and numbered steps. Marks sit in blocks on their own lane, fade in and out, and zoom with
   what they point at.
 - **Watch it full screen** (F) with a player's controls, to judge the cut as your viewers will.
@@ -165,7 +176,13 @@ checks right away. Homebrew leaves an installed copy alone, so the app stays the
 
 - **Capture a display, a window or an area** from a global shortcut, the menu bar or the File
   menu. Add ⌃ to the shortcut to send the picture straight to the clipboard.
-- **Annotate** with arrows, rectangles, ellipses, highlights, a spotlight, blur, text and numbered
+- **A thumbnail after every capture**, in a corner of the screen: drag it into any app, copy it,
+  save it to a folder you choose, look at it with Quick Look, open it to annotate, rename it or
+  swipe it away. Thumbnails stack until you dismiss them or close on their own after a while, and
+  can follow the pointer to another display. Or have every capture open straight in the editor.
+- **Freeze the screen while you choose**, to catch a tooltip or a hover state that would vanish
+  as soon as you moved.
+- **Annotate** with arrows, lines, rectangles, ellipses, highlights, a spotlight, blur, text and numbered
   steps, and crop. None of it is painted onto the pixels, so every mark stays editable later.
 - **Frame a screenshot like a video**, on the same backgrounds, with padding, corners and shadow.
 - **Copy Image** (⇧⌘C) or **export a PNG** (⌘E) at the picture's own pixel density.
@@ -240,8 +257,8 @@ need to be running first: it launches when a client connects. Lumae is also list
 
 ### Built so you stay in charge
 
-- A recording an agent starts shows the same countdown and floating controls as yours; it is never
-  invisible on the Mac it runs on.
+- A recording an agent starts shows the same countdown and floating controls as yours, and you can
+  stop, restart or discard it from them; it is never invisible on the Mac it runs on.
 - `perform_gesture` works only while a recording is running and stops with it. It needs the
   Accessibility permission, which only you can grant.
 - The microphone and camera stay off in an agent's recording unless it asks for them.
@@ -277,6 +294,9 @@ cannot be opened by an older one.
 | ⌥⌘5 | Start or stop a recording |
 | ⌥⌘6 | Record an area |
 | ⌃ added to ⌥⌘3 or ⌥⌘4 | Copy the screenshot to the clipboard |
+| Space, ⌘C, ⌘S, ⌘E, ⌘⌫ | On a screenshot's thumbnail: Quick Look, copy, save, edit, move to the Trash |
+| Arrows (⇧ for ten) | Nudge a recording's area before Record |
+| Return / Esc | During the countdown: start now / cancel |
 | T | Add a title card |
 | A | Annotate the video at the playhead |
 | F | Full-screen preview |
