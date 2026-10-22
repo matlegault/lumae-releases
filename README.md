@@ -138,8 +138,8 @@ checks right away. Homebrew leaves an installed copy alone, so the app stays the
 - **Pictures on the timeline** for an opening or closing card, framed, zoomed and faded like any
   clip.
 - **Fades between clips**, one at a time or on every cut at once.
-- **Annotate the video** (A) with the screenshot editor's arrows, lines, boxes, highlights, spotlight, blur,
-  labels and numbered steps. Marks sit in blocks on their own lane, fade in and out, and zoom with
+- **Annotate the video** (A) with the screenshot editor's arrows, lines, rulers, boxes, pen, highlights,
+  spotlight, blur, labels, numbered steps and emoji stickers. Marks sit in blocks on their own lane, fade in and out, and zoom with
   what they point at.
 - **Watch it full screen** (F) with a player's controls, to judge the cut as your viewers will.
 - **Crop a clip after recording it** (C): free, to the canvas, the original shape, 16:9, 4:3 or
@@ -182,10 +182,20 @@ checks right away. Homebrew leaves an installed copy alone, so the app stays the
   can follow the pointer to another display. Or have every capture open straight in the editor.
 - **Freeze the screen while you choose**, to catch a tooltip or a hover state that would vanish
   as soon as you moved.
-- **Annotate** with arrows, lines, rectangles, ellipses, highlights, a spotlight, blur, text and numbered
-  steps, and crop. None of it is painted onto the pixels, so every mark stays editable later.
+- **Annotate** with arrows, lines, rectangles, ellipses, a pen, highlights, a spotlight, blur, text,
+  numbered steps and emoji stickers, measure anything with a ruler that clings to edges, and crop. None of it is painted onto the pixels, so every mark stays editable later.
 - **Frame a screenshot like a video**, on the same backgrounds, with padding, corners and shadow.
 - **Copy Image** (⇧⌘C) or **export a PNG** (⌘E) at the picture's own pixel density.
+
+### Your projects
+
+- **A library that works like Finder.** Select several projects or screenshots at once, rename
+  them in place, search them by name and make the cards bigger or smaller. Moving something to
+  the Trash asks nothing, and Undo puts it back.
+- **Skim a project** by moving the pointer across its card.
+- **Drop a video** on the library to start a project with it, or a picture to annotate it, and
+  drag a screenshot out into any app.
+- **New projects name themselves** after what their first recording filmed.
 
 ### Export
 
