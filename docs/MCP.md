@@ -19,7 +19,8 @@ The server is the helper inside the app bundle:
 
 Settings › MCP Server shows the exact path for your copy and prints the setup
 below for each client with a Copy button. Lumae does not need to be running:
-the helper launches it in the background when a client connects.
+starting your agent leaves it alone, and the helper launches it in the
+background, with no Dock icon, the first time the agent calls one of its tools.
 
 **Claude Code**
 
@@ -265,7 +266,9 @@ is a different job from wanting captions, and the common case should not be a mu
 
 The app hosts the server (the official MCP Swift SDK's `Server`) and listens
 on a Unix socket inside its sandbox container. The helper relays the client's
-stdio to that socket, launches the app when it is not running, and stages
+stdio to that socket, answers the handshake and the tool list itself so that
+starting a client does not launch Lumae, launches the app for the first tool
+call when it is not running, and stages
 files named by `import_media` into `~/Movies/.lumae-mcp-inbox` so the sandboxed
 app is allowed to read them — that folder rather than the container beside the
 socket, because only the app itself may create a file in its container. The app
@@ -277,13 +280,16 @@ starts. Only your user account can reach the socket.
 - **"Lumae is not available"** (JSON-RPC error -32000): the helper could not
   reach the app within 20 seconds. Check that Lumae launches on its own, and
   that the helper you configured is the one inside the Lumae you run
-  (Settings › MCP Server shows the path).
+  (Settings › MCP Server shows the path). The bundle from the MCP Registry
+  runs the helper inside your installed Lumae, so without one it answers
+  every request with this error, saying Lumae is not installed.
 - **"Lumae closed the connection"** (also -32000): Lumae quit, or an update
-  relaunched it, while the call was in flight. Retry; the next request
+  relaunched it, while the call was in flight. Retry; the next tool call
   launches it again.
 - **The helper's diagnostics** go to its stderr, which most clients show in
   their MCP logs: `lumae-mcp: Lumae is not running; launching it`,
-  `connected to Lumae`, `could not reach Lumae: …`.
+  `connected to Lumae`, `could not reach Lumae: …`. Nothing appears before
+  the agent's first tool call: until then the helper has no reason to reach Lumae.
 - **The app's side** logs to the unified log:
   `log show --predicate 'subsystem == "coderlife.Lumae" AND category == "mcp"' --last 1h --info`.
 - **A Lumae somewhere other than /Applications:** `LUMAE_MCP_APP=/path/to/Lumae.app`
@@ -295,8 +301,8 @@ starts. Only your user account can reach the socket.
 ## Privacy
 
 Analytics record, in the shape PostHog's MCP Analytics reads, that a client
-connected (its name and version, e.g. `claude-code`), that it listed the tools,
-and which tool was called with what outcome, error category and duration, plus
+reached Lumae with its first tool call (its name and version, e.g.
+`claude-code`), that it listed the tools afterwards, and which tool was called with what outcome, error category and duration, plus
 the shape of its arguments (which commands, what numbers, which options, with
 every piece of text such as names, captions and paths replaced by a
 placeholder) and the one-sentence reason the agent gives for the call, which
