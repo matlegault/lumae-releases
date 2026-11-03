@@ -251,7 +251,7 @@ command = "/Applications/Lumae.app/Contents/MacOS/lumae-mcp"
 ```
 
 **Settings › MCP Server** in the app prints each of these with a Copy button, and Lumae does not
-need to be running first: it launches when a client connects. Lumae is also listed in the
+need to be running first: it launches in the background the first time your agent calls one of its tools. Lumae is also listed in the
 [official MCP Registry](https://github.com/modelcontextprotocol/registry) as `io.github.matlegault/lumae`.
 
 ### What an agent can do
